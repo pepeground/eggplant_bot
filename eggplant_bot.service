@@ -1,0 +1,16 @@
+# sudo cp eggplant_bot.service /lib/systemd/system -v
+# sudo systemctl enable eggplant_bot.service
+# sudo systemctl start eggplant_bot.service
+[Unit]
+Description=Eggplant bot
+
+[Service]
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/home/ubuntu/eggplant_bot
+Restart=always
+Environment="TOKEN=bot_token"
+ExecStart=/home/ubuntu/.rbenv/bin/rbenv exec bundle exec ruby main.rb
+
+[Install]
+WantedBy=multi-user.target
