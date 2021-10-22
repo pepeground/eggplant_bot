@@ -80,14 +80,7 @@ class Eggplant
   end
 
   def click(user, data, callback_query_id)
-    if @click_time[user] && (Time.now.utc - @click_time[user]) < 1
-      api(
-        :answer_callback_query,
-        callback_query_id: callback_query_id,
-        text: "Pleas wait..."
-      )
-      return
-    end
+    return if @click_time[user] && (Time.now.utc - @click_time[user]) < 1
 
     a, x, y = data.split('|').map(&:to_i)
 
