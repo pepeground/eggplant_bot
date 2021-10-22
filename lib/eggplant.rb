@@ -35,6 +35,7 @@ class Eggplant
     @message_id = nil
     @matrix = Matrix.build(3, 3){'❓'}.to_a
     @point = [rand(3), rand(3)]
+    @click_time = {}
   end
 
   def api(method, **params)
@@ -79,16 +80,28 @@ class Eggplant
   end
 
   def click(user, data, callback_query_id)
+    if @click_time[user] && (Time.now.utc - @click_time[user]) < 1
+      api(
+        :answer_callback_query,
+        callback_query_id: callback_query_id,
+        text: "Pleas wait..."
+      )
+      return
+    end
+
     a, x, y = data.split('|').map(&:to_i)
 
     if @point === [x, y]
       @matrix[x][y] = '🍆'
       rebuild_buttons
+      sleep 1
       award(user)
     else
       @matrix[x][y] = '🍑'
       rebuild_buttons
     end
+
+    @click_time[user] = Time.now.utc
   end
 
   def award(user)
